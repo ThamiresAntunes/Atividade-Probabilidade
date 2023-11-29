@@ -1,37 +1,106 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>Distribuição de Probabilidade</title>
-  <link  rel="stylesheet" href="style.css" type="text/css" />
+  <link rel="stylesheet" href="style.css" type="text/css" />
 </head>
 
 <body>
-<div id="box">
   <div>
-    <h1>Distribuição Normal de Probabilidade</h1>
-  </div>
-  <form>
-    <fieldset>
-      <div>
-        <label for="mean">Média:</label>
-        <input type="number" name="mean" id="mean" placeholder="Insira a média"required>
-      </div>
-      <div>
-        <label for="stdDev">Desvio Padrão:</label>
-        <input type="number" id="stdDev" placeholder="Insira o desvio padrão"required>
-      </div>
-    </fieldset>
-    
-    <button class="botao" type="submit" >Calcular</button>
-  </form>
-</div>
-  
-        
-  <script src="script.js"></script>
+    <div>
+      <h1>Distribuição Normal de Probabilidade</h1>
+    </div>
+    <form>
+      <fieldset>
+        <div>
+          <label for="media-input">Média:</label>
+          <input type="number" id="media-input" placeholder="Insira a média" required>
+        </div>
+        <div>
+          <label for="desvio-input">Desvio Padrão:</label>
+          <input type="number" id="desvio-input" placeholder="Insira o desvio padrão" required>
+        </div>
+        <div>
+          <label for="tamanho-input">Tamanho da amostra:</label>
+          <input type="number" id="tamanho-input" placeholder="Insira o tamanho da amostra" required>
+        </div>
+      </fieldset>
 
-  
+      <button class="botao" type="submit">Calcular</button>
+    </form>
+
+    <canvas id="mychart"></canvas>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    // Função para calcular a distribuição normal
+    function calcDistribuicao(x, media, desvio) {
+      return (1 / (desvio * Math.sqrt(2 * Math.PI))) * Math.exp(-(Math.pow(x - media, 2) / (2 * Math.pow(desvio, 2))));
+    }
+
+    // Dados da distribuição normal
+    function pegarDistribuicaoNormal(media, desvio, tamanho) {
+      const data = [];
+      for (let i = 0; i < tamanho; i++) {
+        const x = (i - tamanho / 2) * (desvio / 3); // Normalizando x
+        const y = calcDistribuicao(x, media, desvio);
+        data.push({x, y});
+      }
+      return data;
+    }
+
+
+    let myChart = null;
+
+    document.querySelector('form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      // Configuração do gráfico
+      const ctx = document.getElementById('mychart').getContext('2d');
+      const media = Number(document.querySelector("#media-input").value); // Sua média
+      const desvio = Number(document.querySelector("#desvio-input").value); // Seu desvio padrão
+      const tamanho = Number(document.querySelector("#tamanho-input").value); // Tamanho da amostra
+
+      const data = {
+        datasets: [{
+          label: 'Distribuição Normal',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          data: pegarDistribuicaoNormal(media, desvio, tamanho),
+        }],
+      };
+
+      const options = {
+        scales: {
+          x: {
+            type: 'linear',
+            position: 'bottom',
+          },
+          y: {
+            type: 'linear',
+            position: 'left',
+          },
+        },
+      };
+
+
+      //destuindo chart antigo
+      if (myChart != null)
+        myChart.destroy();
+
+      // Criando o gráfico
+      myChart = new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: options,
+      });
+    });
+
+
+  </script>
   <script src="https://replit.com/public/js/replit-badge-v2.js" theme="dark" position="bottom-right"></script>
 </body>
 

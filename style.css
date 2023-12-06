@@ -42,3 +42,19 @@ input:focus {
   outline-color: #ca4802;
 }
 
+button {
+  border: none;
+  background: #ca4802;
+  color: white;
+  font-weight: bold;
+  padding: 8px 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0px 2px 1px #00000030;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: white;
+  color: #ca4802;
+}
